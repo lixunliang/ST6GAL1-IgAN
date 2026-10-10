@@ -2,7 +2,29 @@
 
 Code for "Genetic dissection of the ST6GAL1 locus separates B-cell ST6GAL1 expression from IgG sialylation in susceptibility to IgA nephropathy".
 
-All analyses use publicly available summary statistics. Scripts are numbered in the order they were run. Each script reads from and writes to a project directory given by the environment variable `MR_PROJ` (default `F:\孟德尔`); reference LD and deCODE files are read from `MR_OLD_PROJ`. Python 3.10+ with NumPy and pandas; SciPy and openpyxl for some steps; Matplotlib for figures; Node.js with the `docx` package for building the Word documents.
+All analyses use publicly available data: GWAS and QTL summary statistics, and de-identified single-cell RNA-sequencing count matrices from GEO (GSE285335) for one analysis. No individual-level genotype data are used.
+
+## Setup
+
+Scripts read from and write to a project directory given by the environment variable `MR_PROJ`; reference LD (1000 Genomes) and deCODE files are read from `MR_OLD_PROJ`. The defaults in the scripts are the authors' local paths and should be overridden, for example:
+
+```bash
+export MR_PROJ=/path/to/project          # Windows: set MR_PROJ=D:\project
+export MR_OLD_PROJ=/path/to/reference
+```
+
+Software used: Python 3.11 with NumPy (1.26), pandas (2.x), SciPy (1.11), openpyxl (3.1) and Matplotlib (3.8); Node.js 20+ with the `docx` package (9.x) for building Word documents. Version numbers are those used by the authors; nearby versions are expected to work. Scripts that download data need internet access to the listed public servers.
+
+## Run order
+
+1. `00_build_olink_cis_instruments.py` (Olink instruments from Sun et al. 2023 ST9/ST16)
+2. Downloads: `131`, `134`, `142`, `143`, `146`
+3. Screen: `144` (SomaScan), `145` (Olink)
+4. Colocalization of candidates: `147`
+5. ST6GAL1 follow-up: `148` (serum IgA, reverse MR) → `149` (instruments, epitope checks, GTEx) → `150`–`152` (IgG N-glycome and two-signal analysis) → `153`–`154` (expression QTL) → `155` (PheWAS) → `156` (East Asian LD) → `157`–`159` (GEO and single-cell) → `160` (sensitivity analyses)
+6. Figures and tables: `figures_tables/make_figs.py`, `make_figs2.py`, `make_supp.py`, then the `build_*.js` scripts
+
+Scripts `98`, `116`, `122` and `141` contain shared functions imported by later scripts.
 
 ## Data to download (see Methods for sources)
 
